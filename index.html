@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Repérage Pro">
+<meta name="theme-color" content="#e05c14">
+<title>Repérage Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --card: #161616;
+  --card2: #1e1e1e;
+  --border: #2a2a2a;
+  --border2: #383838;
+  --text: #ede9e0;
+  --text2: #9a9590;
+  --text3: #5a5650;
+  --orange: #e05c14;
+  --orange2: #f07030;
+  --red: #c0392b;
+  --green: #1e8a4a;
+  --blue: #1a5fa0;
+  --purple: #7c3aed;
+  --purplebg: rgba(124,58,237,0.12);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; }
+body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; display: flex; flex-direction: column; }
+
+/* HEADER */
+.header { background: var(--card); border-bottom: 1px solid var(--border); padding: 0 14px; height: 54px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; z-index: 10; }
+.logo { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 3px; color: var(--text); display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.logo-dot { color: var(--orange); }
+.header-btns { display: flex; gap: 6px; }
+.hbtn { background: var(--orange); color: white; border: none; padding: 7px 11px; border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; cursor: pointer; transition: opacity 0.15s; }
+.hbtn:active { opacity: 0.75; }
+.hbtn.blue { background: var(--blue); }
+.hbtn.green { background: var(--green); }
+
+/* NAV */
+.nav-bottom { background: var(--card); border-top: 1px solid var(--border); display: flex; flex-shrink: 0; z-index: 10; }
+.nav-tab { flex: 1; background: none; border: none; color: var(--text3); padding: 10px 4px 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; transition: color 0.15s; font-family: 'DM Sans', sans-serif; }
+.nav-tab.active { color: var(--orange); }
+.nav-tab .nav-icon { font-size: 22px; line-height: 1; }
+.nav-tab .nav-label { font-size: 9px; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 600; }
+
+/* MAIN */
+.main { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+.screen { display: none; padding: 14px; }
+.screen.active { display: block; }
+
+/* SECTION TITLE */
+.section-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--text3); text-transform: uppercase; margin-bottom: 10px; margin-top: 18px; }
+.section-title:first-child { margin-top: 0; }
+
+/* CARD */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+.card-row { display: flex; align-items: center; padding: 14px 16px; gap: 12px; cursor: pointer; transition: background 0.12s; user-select: none; }
+.card-row:active { background: var(--card2); }
+.card-row + .card-row { border-top: 1px solid var(--border); }
+.card-icon { font-size: 20px; flex-shrink: 0; }
+.card-text { flex: 1; min-width: 0; }
+.card-name { font-size: 14px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.card-badge { background: var(--orange); color: white; font-family: 'DM Mono', monospace; font-size: 10px; padding: 2px 7px; border-radius: 10px; flex-shrink: 0; }
+.card-arrow { color: var(--text3); font-size: 18px; flex-shrink: 0; background: none; border: none; cursor: pointer; padding: 4px; }
+
+/* EMPTY */
+.empty { text-align: center; padding: 60px 20px 30px; }
+.empty-icon { font-size: 48px; margin-bottom: 16px; }
+.empty-text { color: var(--text3); font-size: 14px; line-height: 1.6; }
+
+/* BIG BUTTON */
+.btn-big { width: 100%; background: var(--orange); color: white; border: none; border-radius: 10px; padding: 16px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; transition: opacity 0.12s; }
+.btn-big:active { opacity: 0.8; }
+.btn-big.secondary { background: var(--card); color: var(--text2); border: 1px dashed var(--border2); }
+.btn-big.purple { background: var(--purplebg); color: #c4b5fd; border: 1px solid var(--purple); }
+
+/* FIELD */
+.field-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 1.5px; color: var(--text3); text-transform: uppercase; margin-bottom: 5px; }
+.field-wrap { background: var(--card2); border: 1px solid var(--border2); border-radius: 8px; display: flex; align-items: center; padding: 12px 14px; gap: 10px; margin-bottom: 10px; }
+.field-wrap:focus-within { border-color: var(--orange); }
+.field-wrap input, .field-wrap textarea { background: none; border: none; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; flex: 1; min-width: 0; outline: none; resize: none; line-height: 1.5; }
+.field-wrap input::placeholder, .field-wrap textarea::placeholder { color: var(--text3); font-style: italic; }
+.mic-btn { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 20px; padding: 2px; flex-shrink: 0; transition: color 0.12s; line-height: 1; }
+.mic-btn:active { color: var(--orange); }
+.mic-btn.recording { color: var(--red); animation: pulse 0.8s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* REC INDICATOR */
+.rec-indicator { display: none; align-items: center; gap: 8px; background: rgba(192,57,43,0.1); border: 1px solid rgba(192,57,43,0.3); border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; }
+.rec-indicator.on { display: flex; }
+.rec-dot { width: 7px; height: 7px; background: var(--red); border-radius: 50%; animation: pulse 0.8s infinite; flex-shrink: 0; }
+.rec-text { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--red); letter-spacing: 1px; flex: 1; }
+.rec-timer { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--red); }
+
+/* PHOTO */
+.photo-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+.photo-btn { background: var(--card2); border: 1px solid var(--border2); border-radius: 8px; padding: 14px 10px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px; font-family: 'DM Sans', sans-serif; font-size: 11px; color: var(--text2); transition: all 0.12s; }
+.photo-btn:active { border-color: var(--orange); }
+.photo-btn .photo-icon { font-size: 24px; }
+input[type="file"] { display: none; }
+.photo-preview { display: none; position: relative; border-radius: 8px; overflow: hidden; margin-bottom: 10px; background: var(--card2); }
+.photo-preview.show { display: block; }
+.photo-preview img { width: 100%; max-height: 220px; object-fit: contain; display: block; }
+.photo-remove { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.7); color: white; border: none; border-radius: 50%; width: 28px; height: 28px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+/* OBS LIST */
+.obs-item { background: var(--card2); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; overflow: hidden; }
+.obs-img img { width: 100%; max-height: 180px; object-fit: contain; background: #111; display: block; }
+.obs-body { padding: 10px 12px; }
+.obs-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+.obs-num { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--orange); letter-spacing: 1px; }
+.obs-time { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--text3); }
+.obs-note { font-size: 13px; color: var(--text2); line-height: 1.6; white-space: pre-wrap; }
+.obs-del { float: right; background: none; border: none; color: var(--text3); cursor: pointer; font-size: 14px; padding: 0 0 0 8px; }
+
+/* TABS */
+.rub-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 14px; scrollbar-width: none; }
+.rub-tabs::-webkit-scrollbar { display: none; }
+.rub-tab { flex-shrink: 0; background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 6px 12px; font-size: 11px; color: var(--text2); cursor: pointer; white-space: nowrap; transition: all 0.12s; display: flex; align-items: center; gap: 4px; }
+.rub-tab.active { background: var(--orange); border-color: var(--orange); color: white; }
+
+/* BREADCRUMB */
+.breadcrumb { display: flex; align-items: center; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+.bc-item { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 1px; color: var(--text3); text-transform: uppercase; cursor: pointer; }
+.bc-item:hover { color: var(--text2); }
+.bc-item.current { color: var(--text); cursor: default; }
+.bc-sep { color: var(--text3); font-size: 12px; }
+
+/* CONTACT CARD */
+.contact-card { background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 8px; position: relative; }
+.contact-del { position: absolute; top: 10px; right: 10px; background: none; border: none; color: var(--text3); cursor: pointer; font-size: 16px; }
+
+/* ELEC */
+.elec-modes { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+.elec-mode-btn { background: var(--card2); border: 1px solid var(--border2); border-radius: 8px; padding: 10px 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; color: var(--text2); text-align: center; transition: all 0.12s; }
+.elec-mode-btn.active { border-color: var(--orange); color: var(--orange); background: rgba(224,92,20,0.08); }
+
+/* MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; display: none; align-items: flex-end; }
+.modal-overlay.show { display: flex; }
+.modal-sheet { background: var(--card); border-radius: 16px 16px 0 0; padding: 20px 20px 36px; width: 100%; }
+.modal-handle { width: 40px; height: 4px; background: var(--border2); border-radius: 2px; margin: 0 auto 16px; }
+.modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; margin-bottom: 4px; }
+.modal-sub { font-size: 12px; color: var(--text3); margin-bottom: 14px; }
+.modal-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+.modal-cancel { background: var(--card2); color: var(--text2); border: 1px solid var(--border2); border-radius: 8px; padding: 12px; font-size: 14px; cursor: pointer; }
+.modal-ok { background: var(--orange); color: white; border: none; border-radius: 8px; padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer; }
+
+/* ACTION SHEET */
+.action-sheet { position: fixed; inset: 0; z-index: 100; display: none; }
+.action-sheet.show { display: block; }
+.action-sheet-bg { position: absolute; inset: 0; background: rgba(0,0,0,0.5); }
+.action-sheet-content { position: absolute; bottom: 0; left: 0; right: 0; background: var(--card); border-radius: 16px 16px 0 0; padding: 16px 16px 36px; }
+.action-sheet-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--text3); text-align: center; margin-bottom: 14px; }
+.action-btn { display: block; width: 100%; background: var(--card2); border: none; border-radius: 8px; padding: 14px 16px; color: var(--text); font-size: 14px; cursor: pointer; text-align: left; margin-bottom: 8px; }
+.action-btn:active { opacity: 0.7; }
+.action-btn.danger { color: var(--red); }
+
+/* SYNTHESE */
+.synth-box { background: var(--purplebg); border: 1px solid var(--purple); border-radius: 10px; padding: 14px; margin-bottom: 14px; }
+.synth-title { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 2px; color: #a78bfa; margin-bottom: 8px; }
+.synth-text { font-size: 13px; color: var(--text2); line-height: 1.7; }
+.synth-text p { margin-bottom: 8px; }
+.synth-text strong { color: var(--text); }
+
+/* TOAST */
+.toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--text); color: var(--bg); padding: 10px 18px; border-radius: 20px; font-size: 13px; font-weight: 600; z-index: 200; opacity: 0; transition: opacity 0.2s; white-space: nowrap; pointer-events: none; }
+.toast.show { opacity: 1; }
+
+/* ADRESSE */
+.addr-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 8px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo" onclick="goHome()"><span class="logo-dot">●</span> REPÉRAGE</div>
+  <div class="header-btns" id="header-btns">
+    <button class="hbtn blue" onclick="genFilmReport()">🎬 FILM</button>
+    <button class="hbtn green" onclick="openMapDecors()">🗺️</button>
+    <button class="hbtn" onclick="genReport()">⬇ RAPPORT</button>
+  </div>
+</div>
+
+<div class="main" id="main">
+  <div class="screen active" id="screen-projets"><div id="projets-content"></div></div>
+  <div class="screen" id="screen-decors"><div id="decors-content"></div></div>
+  <div class="screen" id="screen-decor"><div id="decor-content"></div></div>
+  <div class="screen" id="screen-sous"><div id="sous-content"></div></div>
+</div>
+
+<nav class="nav-bottom">
+  <button class="nav-tab active" id="nav-projets" onclick="goHome()">
+    <span class="nav-icon">🎬</span><span class="nav-label">Projets</span>
+  </button>
+  <button class="nav-tab" id="nav-decors" style="display:none" onclick="goScreen('decors')">
+    <span class="nav-icon">📍</span><span class="nav-label" id="nav-decors-label">Décors</span>
+  </button>
+  <button class="nav-tab" id="nav-decor" style="display:none" onclick="goScreen('decor')">
+    <span class="nav-icon">🏛️</span><span class="nav-label" id="nav-decor-label">Décor</span>
+  </button>
+  <button class="nav-tab" id="nav-sous" style="display:none" onclick="goScreen('sous')">
+    <span class="nav-icon">📂</span><span class="nav-label" id="nav-sous-label">Sous-décor</span>
+  </button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<!-- MODAL NOM -->
+<div class="modal-overlay" id="modal-nom">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-nom-title">NOUVEAU</div>
+    <div class="modal-sub" id="modal-nom-sub">Dictez ou tapez le nom</div>
+    <div class="field-wrap">
+      <input type="text" id="modal-nom-input" placeholder="Nom…" maxlength="80" autocomplete="off">
+      <button class="mic-btn" id="modal-nom-mic" onclick="micInput('modal-nom-input','modal-nom-mic')">🎙️</button>
+    </div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal('modal-nom')">Annuler</button>
+      <button class="modal-ok" id="modal-nom-ok">Créer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ACTION SHEET -->
+<div class="action-sheet" id="action-sheet">
+  <div class="action-sheet-bg" onclick="closeActionSheet()"></div>
+  <div class="action-sheet-content">
+    <div class="action-sheet-title" id="as-title"></div>
+    <div id="as-buttons"></div>
+    <button class="action-btn" onclick="closeActionSheet()" style="color:var(--text3);text-align:center">Annuler</button>
+  </div>
+</div>
+
+<input type="file" id="file-cam" accept="image/*" capture="environment">
+<input type="file" id="file-gal" accept="image/*">
+
+<script>
+/* ═══════════════════════════════════════════════
+   CONFIG
+═══════════════════════════════════════════════ */
+const K = ['sk-ant-api03-3KEy3h_BHum4dxf-EMOh5U-1LvaJM-6pnYgVj8tj7iWzKTSJWEHGcm4UyusE9SWlyyxw1TL67Ej','8cSCeWKMlNg-rFT5sgAA'];
+
+const RUBRIQUES = [
+  { id:'stat', icon:'🚌', label:'Stationnement' },
+  { id:'acces', icon:'🔑', label:'Accès' },
+  { id:'elec', icon:'⚡', label:'Électricité', special:'elec' },
+  { id:'prot', icon:'🛡️', label:'Protection' },
+  { id:'lum', icon:'💡', label:'Lumière' },
+  { id:'mach', icon:'🎥', label:'Machinerie' },
+  { id:'deco', icon:'🎨', label:'Déco' },
+  { id:'mob', icon:'🚧', label:'Mobilier urbain' },
+  { id:'circ', icon:'🚦', label:'Circulation' },
+  { id:'cant', icon:'🍽️', label:'Cantine' },
+  { id:'loges', icon:'🎭', label:'Loges', special:'loges' },
+  { id:'prod', icon:'🎬', label:'Production' },
+  { id:'dech', icon:'🗑️', label:'Déchets' },
+  { id:'soc', icon:'🏢', label:'Société ext.' },
+  { id:'secu', icon:'🔐', label:'Sécurité' },
+  { id:'son', icon:'🔊', label:'Son' },
+  { id:'meteo', icon:'☀️', label:'Météo' },
+  { id:'notes', icon:'📝', label:'Notes' },
+];
+
+/* ═══════════════════════════════════════════════
+   STATE & DB
+═══════════════════════════════════════════════ */
+let DB = { projets: [] };
+let state = { projetId: null, decorId: null, sousId: null, rubrique: 'stat' };
+let curPhoto = null;
+let micRecorder = null, isRecording = false, recSec = 0, recTimer = null;
+let synthCache = {};
+let modalNomCb = null;
+let actionTarget = null;
+let toastTimer = null;
+
+function dbSave() { try { localStorage.setItem('rep_v2', JSON.stringify(DB)); } catch(e) {} }
+function dbLoad() {
+  try {
+    const s = localStorage.getItem('rep_v2');
+    if (s) { DB = JSON.parse(s); return; }
+    // Migrate from old format
+    const old = localStorage.getItem('rep_v1');
+    if (old) {
+      const o = JSON.parse(old);
+      if (o.decors) {
+        DB = { projets: [{ id: uid(), nom: 'Mon Projet', decors: o.decors }] };
+        dbSave();
+      } else if (o.projets) {
+        DB = o;
+        dbSave();
+      }
+    }
+  } catch(e) {}
+}
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function getProjet(id) { return DB.projets.find(p => p.id === (id || state.projetId)); }
+function getDecor(id) { const p = getProjet(); return p ? p.decors.find(d => d.id === id) : null; }
+function getSous(did, sid) { const d = getDecor(did); return d ? d.sous.find(s => s.id === sid) : null; }
+function getActif() {
+  if (state.sousId) return getSous(state.decorId, state.sousId);
+  if (state.decorId) return getDecor(state.decorId);
+  return null;
+}
+
+function initTabData() {
+  const td = {};
+  RUBRIQUES.forEach(r => {
+    if (r.special === 'elec') td[r.id] = { mode:'', puissance:'', obs:[] };
+    else if (r.special === 'loges') td[r.id] = { lieu:'', contact:'', tel:'', acces:'', obs:[] };
+    else td[r.id] = { obs:[] };
+  });
+  return td;
+}
+
+function countObs(entity) {
+  if (!entity || !entity.tabData) return 0;
+  return RUBRIQUES.reduce((a,r) => a + (entity.tabData[r.id]?.obs?.length||0), 0);
+}
+function totalDecor(d) {
+  return countObs(d) + d.sous.reduce((a,s) => a + countObs(s), 0);
+}
+
+/* ═══════════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════════ */
+function goScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  const navEl = document.getElementById('nav-' + name);
+  if (navEl) navEl.classList.add('active');
+  if (name === 'projets') renderProjets();
+  else if (name === 'decors') renderDecors();
+  else if (name === 'decor') renderDecor();
+  else if (name === 'sous') renderSous();
+  document.getElementById('main').scrollTop = 0;
+}
+
+function goHome() {
+  state.projetId = null; state.decorId = null; state.sousId = null;
+  ['decors','decor','sous'].forEach(id => { document.getElementById('nav-'+id).style.display = 'none'; });
+  goScreen('projets');
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+/* ═══════════════════════════════════════════════
+   MODAL NOM
+═══════════════════════════════════════════════ */
+function openModalNom(title, sub, val, cb) {
+  document.getElementById('modal-nom-title').textContent = title;
+  document.getElementById('modal-nom-sub').textContent = sub || 'Dictez ou tapez le nom';
+  const inp = document.getElementById('modal-nom-input');
+  inp.value = val || '';
+  modalNomCb = cb;
+  document.getElementById('modal-nom').classList.add('show');
+  setTimeout(() => inp.focus(), 300);
+}
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+document.getElementById('modal-nom-ok').onclick = function() {
+  const v = document.getElementById('modal-nom-input').value.trim();
+  if (!v) { toast('Entrez un nom'); return; }
+  closeModal('modal-nom');
+  if (modalNomCb) modalNomCb(v);
+};
+document.getElementById('modal-nom-input').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('modal-nom-ok').click(); });
+
+function closeActionSheet() { document.getElementById('action-sheet').classList.remove('show'); }
+
+/* ═══════════════════════════════════════════════
+   SCREEN: PROJETS
+═══════════════════════════════════════════════ */
+function renderProjets() {
+  const el = document.getElementById('projets-content');
+  let html = '';
+  if (!DB.projets.length) {
+    html += '<div class="empty"><div class="empty-icon">🎬</div><div class="empty-text">Aucun projet.<br>Créez votre premier projet de repérage.</div></div>';
+  } else {
+    html += '<div class="section-title">Mes projets (' + DB.projets.length + ')</div><div class="card">';
+    DB.projets.forEach((p, idx) => {
+      const nbD = p.decors.length;
+      const nbObs = p.decors.reduce((a,d) => a + totalDecor(d), 0);
+      html += '<div class="card-row" onclick="selectProjet(\'' + p.id + '\')">'
+        + '<span class="card-icon">🎬</span>'
+        + '<div class="card-text"><div class="card-name">' + esc(p.nom) + '</div>'
+        + '<div class="card-sub">' + nbD + ' décor' + (nbD>1?'s':'') + (nbObs ? ' · ' + nbObs + ' obs.' : '') + '</div></div>'
+        + (nbObs ? '<span class="card-badge">' + nbObs + '</span>' : '')
+        + '<button class="card-arrow" onclick="event.stopPropagation();projetActions(\'' + p.id + '\',' + idx + ')">⋮</button>'
+        + '</div>';
+    });
+    html += '</div>';
+  }
+  html += '<button class="btn-big" onclick="newProjet()">+ Nouveau projet</button>';
+  el.innerHTML = html;
+}
+
+function selectProjet(id) {
+  state.projetId = id; state.decorId = null; state.sousId = null;
+  const p = getProjet(id);
+  document.getElementById('nav-decors-label').textContent = p.nom.substring(0,12);
+  document.getElementById('nav-decors').style.display = '';
+  document.getElementById('nav-decor').style.display = 'none';
+  document.getElementById('nav-sous').style.display = 'none';
+  goScreen('decors');
+}
+
+function newProjet() {
+  openModalNom('NOUVEAU PROJET', 'Ex: Film Projecta, Pub BMP…', '', val => {
+    const p = { id: uid(), nom: val, decors: [] };
+    DB.projets.push(p); dbSave();
+    selectProjet(p.id);
+    toast('✓ Projet créé');
+  });
+}
+
+function projetActions(id, idx) {
+  const p = getProjet(id);
+  document.getElementById('as-title').textContent = p.nom.toUpperCase();
+  document.getElementById('as-buttons').innerHTML =
+    '<button class="action-btn" onclick="closeActionSheet();renommerProjet(\'' + id + '\')">✏️ &nbsp;Renommer</button>'
+    + (idx > 0 ? '<button class="action-btn" onclick="closeActionSheet();moveProjet(\'' + id + '\',-1)">↑ &nbsp;Monter</button>' : '')
+    + (idx < DB.projets.length-1 ? '<button class="action-btn" onclick="closeActionSheet();moveProjet(\'' + id + '\',1)">↓ &nbsp;Descendre</button>' : '')
+    + '<button class="action-btn danger" onclick="closeActionSheet();supprimerProjet(\'' + id + '\')">🗑️ &nbsp;Supprimer ce projet</button>';
+  document.getElementById('action-sheet').classList.add('show');
+}
+
+function renommerProjet(id) {
+  const p = getProjet(id);
+  openModalNom('RENOMMER PROJET', '', p.nom, val => { p.nom = val; dbSave(); renderProjets(); toast('✓ Renommé'); });
+}
+function moveProjet(id, dir) {
+  const idx = DB.projets.findIndex(p => p.id === id);
+  const ni = idx + dir;
+  if (ni < 0 || ni >= DB.projets.length) return;
+  [DB.projets[idx], DB.projets[ni]] = [DB.projets[ni], DB.projets[idx]];
+  dbSave(); renderProjets();
+}
+function supprimerProjet(id) {
+  const p = getProjet(id);
+  if (!confirm('Supprimer "' + p.nom + '" et tous ses décors ?')) return;
+  DB.projets = DB.projets.filter(x => x.id !== id);
+  if (state.projetId === id) goHome();
+  dbSave(); renderProjets(); toast('✓ Projet supprimé');
+}
+
+/* ═══════════════════════════════════════════════
+   SCREEN: DÉCORS
+═══════════════════════════════════════════════ */
+function renderDecors() {
+  const p = getProjet();
+  if (!p) { goHome(); return; }
+  const el = document.getElementById('decors-content');
+  let html = '<button class="btn-big" onclick="newDecor()">+ Nouveau décor</button>';
+  if (!p.decors.length) {
+    html += '<div class="empty"><div class="empty-icon">📍</div><div class="empty-text">Aucun décor.<br>Créez votre premier décor.</div></div>';
+  } else {
+    html += '<div class="section-title">Décors (' + p.decors.length + ')</div><div class="card">';
+    p.decors.forEach((d, idx) => {
+      const tot = totalDecor(d);
+      const sub = (d.sous.length ? d.sous.length + ' sous-décor' + (d.sous.length>1?'s':'') : 'Pas de sous-décor') + (tot ? ' · ' + tot + ' obs.' : '');
+      html += '<div class="card-row" onclick="selectDecor(\'' + d.id + '\')">'
+        + '<span class="card-icon">📍</span>'
+        + '<div class="card-text"><div class="card-name">' + esc(d.nom) + '</div><div class="card-sub">' + sub + '</div></div>'
+        + (tot ? '<span class="card-badge">' + tot + '</span>' : '')
+        + '<button class="card-arrow" onclick="event.stopPropagation();decorActions(\'' + d.id + '\',' + idx + ')">⋮</button>'
+        + '</div>';
+    });
+    html += '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function selectDecor(id) {
+  state.decorId = id; state.sousId = null; state.rubrique = 'stat';
+  const d = getDecor(id);
+  document.getElementById('nav-decor-label').textContent = d.nom.substring(0,10);
+  document.getElementById('nav-decor').style.display = '';
+  document.getElementById('nav-sous').style.display = 'none';
+  goScreen('decor');
+}
+
+function newDecor() {
+  openModalNom('NOUVEAU DÉCOR', '', '', val => {
+    const p = getProjet();
+    if (!p) return;
+    const d = { id: uid(), nom: val, adresse:'', codepostal:'', ville:'', contacts:[], tabData: initTabData(), sous:[] };
+    p.decors.push(d); dbSave();
+    selectDecor(d.id);
+    toast('✓ Décor créé');
+  });
+}
+
+function decorActions(id, idx) {
+  const p = getProjet();
+  const d = getDecor(id);
+  document.getElementById('as-title').textContent = d.nom.toUpperCase();
+  document.getElementById('as-buttons').innerHTML =
+    '<button class="action-btn" onclick="closeActionSheet();renommerDecor(\'' + id + '\')">✏️ &nbsp;Renommer</button>'
+    + (idx > 0 ? '<button class="action-btn" onclick="closeActionSheet();moveDecor(\'' + id + '\',-1)">↑ &nbsp;Monter</button>' : '')
+    + (idx < p.decors.length-1 ? '<button class="action-btn" onclick="closeActionSheet();moveDecor(\'' + id + '\',1)">↓ &nbsp;Descendre</button>' : '')
+    + '<button class="action-btn danger" onclick="closeActionSheet();supprimerDecor(\'' + id + '\')">🗑️ &nbsp;Supprimer ce décor</button>';
+  document.getElementById('action-sheet').classList.add('show');
+}
+
+function renommerDecor(id) {
+  const d = getDecor(id);
+  openModalNom('RENOMMER DÉCOR', '', d.nom, val => {
+    d.nom = val; dbSave();
+    document.getElementById('nav-decor-label').textContent = val.substring(0,10);
+    renderDecors(); toast('✓ Renommé');
+  });
+}
+function moveDecor(id, dir) {
+  const p = getProjet();
+  const idx = p.decors.findIndex(d => d.id === id);
+  const ni = idx + dir;
+  if (ni < 0 || ni >= p.decors.length) return;
+  [p.decors[idx], p.decors[ni]] = [p.decors[ni], p.decors[idx]];
+  dbSave(); renderDecors();
+}
+function supprimerDecor(id) {
+  const d = getDecor(id);
+  if (!confirm('Supprimer "' + d.nom + '" ?')) return;
+  const p = getProjet();
+  p.decors = p.decors.filter(x => x.id !== id);
+  if (state.decorId === id) { state.decorId = null; document.getElementById('nav-decor').style.display = 'none'; document.getElementById('nav-sous').style.display = 'none'; }
+  dbSave(); goScreen('decors'); toast('✓ Décor supprimé');
+}
+
+/* ═══════════════════════════════════════════════
+   SCREEN: DÉCOR (adresse + contacts + rubriques)
+═══════════════════════════════════════════════ */
+function renderDecor() {
+  const d = getDecor(state.decorId);
+  if (!d) { goScreen('decors'); return; }
+  const p = getProjet();
+  const el = document.getElementById('decor-content');
+  let html = '';
+
+  // Breadcrumb
+  html += '<div class="breadcrumb">'
+    + '<span class="bc-item" onclick="goScreen(\'decors\')">' + esc(p.nom) + '</span>'
+    + '<span class="bc-sep">›</span>'
+    + '<span class="bc-item current">' + esc(d.nom) + '</span>'
+    + '</div>';
+
+  // Adresse
+  html += '<div class="section-title">📍 Adresse du décor</div>';
+  html += '<div class="card" style="padding:14px 16px;margin-bottom:10px">';
+  html += '<div class="field-label">ADRESSE</div>';
+  html += '<div class="field-wrap" style="margin-bottom:8px">'
+    + '<input type="text" placeholder="Rue, numéro…" value="' + esc(d.adresse||'') + '" oninput="getDecor(\'' + d.id + '\').adresse=this.value;dbSave()">'
+    + '</div>';
+  html += '<div class="addr-grid">'
+    + '<div><div class="field-label">CODE POSTAL</div>'
+    + '<div class="field-wrap"><input type="text" placeholder="75001" value="' + esc(d.codepostal||'') + '" oninput="getDecor(\'' + d.id + '\').codepostal=this.value;dbSave()"></div></div>'
+    + '<div><div class="field-label">VILLE</div>'
+    + '<div class="field-wrap"><input type="text" placeholder="Paris" value="' + esc(d.ville||'') + '" oninput="getDecor(\'' + d.id + '\').ville=this.value;dbSave()"></div></div>'
+    + '</div>';
+  html += '</div>';
+
+  // Contacts
+  html += '<div class="section-title">📇 Contacts</div>';
+  d.contacts.forEach(c => {
+    html += '<div class="contact-card">'
+      + '<button class="contact-del" onclick="delContact(\'' + d.id + '\',\'' + c.id + '\')">✕</button>'
+      + '<div class="field-label">NOM / FONCTION</div>'
+      + '<div class="field-wrap" style="margin-bottom:8px"><input type="text" placeholder="Nom…" value="' + esc(c.nom) + '" oninput="saveContact(\'' + d.id + '\',\'' + c.id + '\',\'nom\',this.value)"><button class="mic-btn" onclick="micInline(this,v=>{this.previousElementSibling.value=v;saveContact(\'' + d.id + '\',\'' + c.id + '\',\'nom\',v)})">🎙️</button></div>'
+      + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'
+      + '<div><div class="field-label">TÉL.</div><div class="field-wrap"><input type="tel" placeholder="Tél." value="' + esc(c.tel) + '" oninput="saveContact(\'' + d.id + '\',\'' + c.id + '\',\'tel\',this.value)"></div></div>'
+      + '<div><div class="field-label">EMAIL</div><div class="field-wrap"><input type="email" placeholder="Email" value="' + esc(c.mail) + '" oninput="saveContact(\'' + d.id + '\',\'' + c.id + '\',\'mail\',this.value)"></div></div>'
+      + '</div></div>';
+  });
+  html += '<button class="btn-big secondary" onclick="addContact(\'' + d.id + '\')">+ Ajouter un contact</button>';
+
+  // Sous-décors
+  html += '<div class="section-title">Sous-décors (' + d.sous.length + ')</div>';
+  if (d.sous.length) {
+    html += '<div class="card">';
+    d.sous.forEach((s, idx) => {
+      const cnt = countObs(s);
+      html += '<div class="card-row" onclick="selectSous(\'' + d.id + '\',\'' + s.id + '\')">'
+        + '<span class="card-icon">📂</span>'
+        + '<div class="card-text"><div class="card-name">' + esc(s.nom) + '</div><div class="card-sub">' + (cnt ? cnt + ' obs.' : 'Aucune obs.') + '</div></div>'
+        + (cnt ? '<span class="card-badge">' + cnt + '</span>' : '')
+        + '<button class="card-arrow" onclick="event.stopPropagation();sousActions(\'' + d.id + '\',\'' + s.id + '\',' + idx + ')">⋮</button>'
+        + '</div>';
+    });
+    html += '</div>';
+  }
+  html += '<button class="btn-big secondary" onclick="newSous(\'' + d.id + '\')">+ Nouveau sous-décor</button>';
+
+  // Rubriques décor direct
+  html += '<div class="section-title">Rubriques du décor</div>';
+  html += '<div class="rub-tabs" id="rub-tabs-decor">';
+  RUBRIQUES.forEach(r => {
+    const cnt = d.tabData[r.id]?.obs?.length || 0;
+    html += '<button class="rub-tab' + (state.rubrique === r.id ? ' active' : '') + '" onclick="setRubrique(\'' + r.id + '\',\'decor\')">'
+      + r.icon + ' ' + r.label + (cnt ? ' <span style="background:rgba(255,255,255,0.3);border-radius:10px;padding:0 5px;font-size:9px">' + cnt + '</span>' : '')
+      + '</button>';
+  });
+  html += '</div>';
+  html += '<div id="rub-content-decor">';
+  html += renderRubrique(state.rubrique, state.decorId, null);
+  html += '</div>';
+
+  el.innerHTML = html;
+}
+
+/* ═══════════════════════════════════════════════
+   CONTACTS
+═══════════════════════════════════════════════ */
+function saveContact(did, cid, field, val) {
+  const d = getDecor(did);
+  const c = d.contacts.find(x => x.id === cid);
+  if (c) { c[field] = val; dbSave(); }
+}
+function addContact(did) {
+  const d = getDecor(did);
+  d.contacts.push({ id: uid(), nom:'', tel:'', mail:'' });
+  dbSave(); renderDecor();
+}
+function delContact(did, cid) {
+  const d = getDecor(did);
+  d.contacts = d.contacts.filter(c => c.id !== cid);
+  dbSave(); renderDecor();
+}
+
+/* ═══════════════════════════════════════════════
+   SOUS-DÉCORS
+═══════════════════════════════════════════════ */
+function selectSous(did, sid) {
+  state.decorId = did; state.sousId = sid; state.rubrique = 'stat';
+  const s = getSous(did, sid);
+  document.getElementById('nav-sous-label').textContent = s.nom.substring(0,10);
+  document.getElementById('nav-sous').style.display = '';
+  goScreen('sous');
+}
+function newSous(did) {
+  openModalNom('NOUVEAU SOUS-DÉCOR', '', '', val => {
+    const d = getDecor(did);
+    const s = { id: uid(), nom: val, tabData: initTabData() };
+    d.sous.push(s); dbSave();
+    selectSous(did, s.id);
+    toast('✓ Sous-décor créé');
+  });
+}
+function sousActions(did, sid, idx) {
+  const d = getDecor(did);
+  const s = getSous(did, sid);
+  document.getElementById('as-title').textContent = s.nom.toUpperCase();
+  document.getElementById('as-buttons').innerHTML =
+    '<button class="action-btn" onclick="closeActionSheet();renommerSous(\'' + did + '\',\'' + sid + '\')">✏️ &nbsp;Renommer</button>'
+    + (idx > 0 ? '<button class="action-btn" onclick="closeActionSheet();moveSous(\'' + did + '\',\'' + sid + '\',-1)">↑ &nbsp;Monter</button>' : '')
+    + (idx < d.sous.length-1 ? '<button class="action-btn" onclick="closeActionSheet();moveSous(\'' + did + '\',\'' + sid + '\',1)">↓ &nbsp;Descendre</button>' : '')
+    + '<button class="action-btn danger" onclick="closeActionSheet();supprimerSous(\'' + did + '\',\'' + sid + '\')">🗑️ &nbsp;Supprimer</button>';
+  document.getElementById('action-sheet').classList.add('show');
+}
+function renommerSous(did, sid) {
+  const s = getSous(did, sid);
+  openModalNom('RENOMMER', '', s.nom, val => {
+    s.nom = val; dbSave();
+    document.getElementById('nav-sous-label').textContent = val.substring(0,10);
+    renderDecor(); toast('✓ Renommé');
+  });
+}
+function moveSous(did, sid, dir) {
+  const d = getDecor(did);
+  const idx = d.sous.findIndex(s => s.id === sid);
+  const ni = idx + dir;
+  if (ni < 0 || ni >= d.sous.length) return;
+  [d.sous[idx], d.sous[ni]] = [d.sous[ni], d.sous[idx]];
+  dbSave(); renderDecor();
+}
+function supprimerSous(did, sid) {
+  const s = getSous(did, sid);
+  if (!confirm('Supprimer "' + s.nom + '" ?')) return;
+  const d = getDecor(did);
+  d.sous = d.sous.filter(x => x.id !== sid);
+  if (state.sousId === sid) { state.sousId = null; document.getElementById('nav-sous').style.display = 'none'; }
+  dbSave(); renderDecor(); toast('✓ Supprimé');
+}
+
+function renderSous() {
+  const d = getDecor(state.decorId);
+  const s = getSous(state.decorId, state.sousId);
+  if (!s) { goScreen('decor'); return; }
+  const p = getProjet();
+  const el = document.getElementById('sous-content');
+  let html = '<div class="breadcrumb">'
+    + '<span class="bc-item" onclick="goScreen(\'decors\')">' + esc(p.nom) + '</span>'
+    + '<span class="bc-sep">›</span>'
+    + '<span class="bc-item" onclick="goScreen(\'decor\')">' + esc(d.nom) + '</span>'
+    + '<span class="bc-sep">›</span>'
+    + '<span class="bc-item current">' + esc(s.nom) + '</span>'
+    + '</div>';
+  html += '<div class="rub-tabs">';
+  RUBRIQUES.forEach(r => {
+    const cnt = s.tabData[r.id]?.obs?.length || 0;
+    html += '<button class="rub-tab' + (state.rubrique === r.id ? ' active' : '') + '" onclick="setRubrique(\'' + r.id + '\',\'sous\')">'
+      + r.icon + ' ' + r.label + (cnt ? ' <span style="background:rgba(255,255,255,0.3);border-radius:10px;padding:0 5px;font-size:9px">' + cnt + '</span>' : '')
+      + '</button>';
+  });
+  html += '</div><div id="rub-content-sous">';
+  html += renderRubrique(state.rubrique, state.decorId, state.sousId);
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+/* ═══════════════════════════════════════════════
+   RUBRIQUES
+═══════════════════════════════════════════════ */
+function setRubrique(rub, screen) {
+  state.rubrique = rub;
+  const entity = screen === 'sous' ? getSous(state.decorId, state.sousId) : getDecor(state.decorId);
+  // Update tabs
+  const tabs = document.querySelectorAll('.rub-tab');
+  tabs.forEach(t => { t.classList.remove('active'); if (t.textContent.includes(RUBRIQUES.find(r=>r.id===rub)?.label)) t.classList.add('active'); });
+  // Re-render all tabs active state
+  if (screen === 'sous') renderSous();
+  else renderDecor();
+}
+
+function renderRubrique(rubId, decorId, sousId) {
+  const r = RUBRIQUES.find(x => x.id === rubId);
+  const entity = sousId ? getSous(decorId, sousId) : getDecor(decorId);
+  if (!r || !entity) return '';
+  const td = entity.tabData[rubId] || { obs:[] };
+  const suffix = "'" + decorId + "','" + (sousId||'') + "'";
+  let html = '';
+
+  // Special: elec
+  if (r.special === 'elec') {
+    html += '<div class="section-title">Mode électrique</div>';
+    html += '<div class="elec-modes">';
+    ['direct','groupe','mixte'].forEach(m => {
+      const labels = { direct:'⚡ Direct', groupe:'🔋 Groupe', mixte:'⚡🔋 Mixte' };
+      html += '<button class="elec-mode-btn' + (td.mode===m?' active':'') + '" onclick="setElecMode(\'' + m + '\',' + suffix + ')">' + labels[m] + '</button>';
+    });
+    html += '</div>';
+    html += '<div class="field-label">PUISSANCE</div>';
+    html += '<div class="field-wrap"><input type="text" placeholder="Ex: 32A tri…" value="' + esc(td.puissance||'') + '" oninput="setElecPuiss(this.value,' + suffix + ')"></div>';
+  }
+
+  // Special: loges
+  if (r.special === 'loges') {
+    html += '<div class="field-label">LIEU DES LOGES</div>';
+    html += '<div class="field-wrap"><input type="text" placeholder="Adresse ou description…" value="' + esc(td.lieu||'') + '" oninput="setLogeField(\'lieu\',this.value,' + suffix + ')"><button class="mic-btn" onclick="micInline(this,v=>{this.previousElementSibling.value=v;setLogeField(\'lieu\',v,' + suffix + ')})">🎙️</button></div>';
+    html += '<div class="field-label">CONTACT</div>';
+    html += '<div class="field-wrap"><input type="text" placeholder="Nom…" value="' + esc(td.contact||'') + '" oninput="setLogeField(\'contact\',this.value,' + suffix + ')"></div>';
+    html += '<div class="field-label">TÉL.</div>';
+    html += '<div class="field-wrap"><input type="tel" placeholder="Tél." value="' + esc(td.tel||'') + '" oninput="setLogeField(\'tel\',this.value,' + suffix + ')"></div>';
+    html += '<div class="field-label">ACCÈS / CODE</div>';
+    html += '<div class="field-wrap"><input type="text" placeholder="Code, badge…" value="' + esc(td.acces||'') + '" oninput="setLogeField(\'acces\',this.value,' + suffix + ')"></div>';
+  }
+
+  // Observations
+  html += '<div class="section-title">' + r.icon + ' ' + r.label + ' — Nouvelle observation</div>';
+
+  // Rec indicator
+  html += '<div class="rec-indicator" id="rec-ind"><div class="rec-dot"></div><span class="rec-text">Dictée en cours…</span><span class="rec-timer" id="rec-timer">0:00</span></div>';
+
+  html += '<div class="field-wrap" style="align-items:flex-start">'
+    + '<textarea id="obs-note" placeholder="Tapez ou dictez votre observation…" rows="3" style="min-height:70px">' + '</textarea>'
+    + '<button class="mic-btn" id="mic-main" onclick="micMain()">🎙️</button>'
+    + '</div>';
+
+  html += '<div class="photo-buttons">'
+    + '<button class="photo-btn" onclick="takePhoto()"><span class="photo-icon">📷</span>Photo</button>'
+    + '<button class="photo-btn" onclick="pickPhoto()"><span class="photo-icon">🖼️</span>Galerie</button>'
+    + '</div>';
+  html += '<div class="photo-preview" id="photo-prev"><button class="photo-remove" onclick="removePhoto()">✕</button><img id="photo-img" src=""></div>';
+
+  html += '<button class="btn-big" onclick="addObs(\'' + rubId + '\',' + suffix + ')">+ Ajouter observation</button>';
+
+  // IA Synthèse
+  const cacheKey = (sousId || decorId) + '_' + rubId;
+  if (synthCache[cacheKey]) {
+    html += '<div class="synth-box"><div class="synth-title">✦ SYNTHÈSE IA</div><div class="synth-text">' + mdToHtml(synthCache[cacheKey]) + '</div></div>';
+  }
+  html += '<button class="btn-big purple" onclick="synthRub(\'' + rubId + '\',' + suffix + ')">✦ Synthétiser avec l\'IA</button>';
+
+  // Existing obs
+  const obs = [...(td.obs||[])].reverse();
+  if (obs.length) {
+    html += '<div class="section-title">Observations (' + obs.length + ')</div>';
+    obs.forEach(o => {
+      html += '<div class="obs-item">';
+      if (o.photo) html += '<div class="obs-img"><img src="' + o.photo + '" loading="lazy"></div>';
+      html += '<div class="obs-body"><div class="obs-meta"><span class="obs-num">OBS.#' + o.num + '</span><span class="obs-time">🕐 ' + o.heure + '</span>'
+        + '<button class="obs-del" onclick="delObs(\'' + rubId + '\',' + suffix + ',\'' + o.id + '\')">🗑️</button></div>'
+        + '<div class="obs-note">' + esc(o.note || '(Sans note)') + '</div></div></div>';
+    });
+  }
+  return html;
+}
+
+function setElecMode(mode, did, sid) {
+  const e = sid ? getSous(did,sid) : getDecor(did);
+  e.tabData['elec'].mode = mode; dbSave();
+  if (sid) renderSous(); else renderDecor();
+}
+function setElecPuiss(val, did, sid) {
+  const e = sid ? getSous(did,sid) : getDecor(did);
+  e.tabData['elec'].puissance = val; dbSave();
+}
+function setLogeField(field, val, did, sid) {
+  const e = sid ? getSous(did,sid) : getDecor(did);
+  e.tabData['loges'][field] = val; dbSave();
+}
+
+function addObs(rubId, did, sid) {
+  const e = sid ? getSous(did,sid) : getDecor(did);
+  const note = document.getElementById('obs-note')?.value?.trim() || '';
+  const photo = curPhoto || null;
+  if (!note && !photo) { toast('Ajoutez une note ou une photo'); return; }
+  const td = e.tabData[rubId];
+  const num = (td.obs.length ? Math.max(...td.obs.map(o=>o.num)) + 1 : 1);
+  td.obs.push({ id: uid(), num, note, photo, heure: new Date().toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'}) });
+  curPhoto = null;
+  dbSave();
+  if (sid) renderSous(); else renderDecor();
+  toast('✓ Observation ajoutée');
+}
+
+function delObs(rubId, did, sid, obsId) {
+  const e = sid ? getSous(did,sid) : getDecor(did);
+  e.tabData[rubId].obs = e.tabData[rubId].obs.filter(o => o.id !== obsId);
+  dbSave();
+  if (sid) renderSous(); else renderDecor();
+  toast('✓ Observation supprimée');
+}
+
+/* ═══════════════════════════════════════════════
+   PHOTO
+═══════════════════════════════════════════════ */
+function takePhoto() { document.getElementById('file-cam').click(); }
+function pickPhoto() { document.getElementById('file-gal').click(); }
+function removePhoto() {
+  curPhoto = null;
+  document.getElementById('photo-prev').classList.remove('show');
+}
+function handleFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    curPhoto = e.target.result;
+    const prev = document.getElementById('photo-prev');
+    if (prev) { document.getElementById('photo-img').src = curPhoto; prev.classList.add('show'); }
+  };
+  reader.readAsDataURL(file);
+}
+document.getElementById('file-cam').addEventListener('change', e => handleFile(e.target.files[0]));
+document.getElementById('file-gal').addEventListener('change', e => handleFile(e.target.files[0]));
+
+/* ═══════════════════════════════════════════════
+   MICRO
+═══════════════════════════════════════════════ */
+function initMic() {
+  if (!navigator.mediaDevices || !window.MediaRecorder) return;
+}
+
+function micMain() {
+  const btn = document.getElementById('mic-main');
+  if (isRecording) { stopMic(btn, 'obs-note'); return; }
+  startMic(btn, 'obs-note');
+}
+
+function micInline(btn, cb) {
+  if (isRecording) { stopMicInline(btn, cb); return; }
+  startMicInline(btn, cb);
+}
+
+function startMic(btn, targetId) {
+  if (!navigator.mediaDevices) { toast('Micro non disponible'); return; }
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+    micRecorder = new MediaRecorder(stream);
+    const chunks = [];
+    micRecorder.ondataavailable = e => chunks.push(e.data);
+    micRecorder.onstop = () => {
+      const blob = new Blob(chunks, { type: 'audio/webm' });
+      transcribe(blob, targetId, null);
+      stream.getTracks().forEach(t => t.stop());
+    };
+    micRecorder.start();
+    isRecording = true;
+    btn.classList.add('recording');
+    btn.textContent = '⏹️';
+    recSec = 0;
+    const ind = document.getElementById('rec-ind');
+    if (ind) ind.classList.add('on');
+    recTimer = setInterval(() => {
+      recSec++;
+      const el = document.getElementById('rec-timer');
+      if (el) el.textContent = Math.floor(recSec/60) + ':' + String(recSec%60).padStart(2,'0');
+    }, 1000);
+  }).catch(() => toast('Accès micro refusé'));
+}
+
+function stopMic(btn, targetId) {
+  if (micRecorder) micRecorder.stop();
+  isRecording = false;
+  btn.classList.remove('recording');
+  btn.textContent = '🎙️';
+  clearInterval(recTimer);
+  const ind = document.getElementById('rec-ind');
+  if (ind) ind.classList.remove('on');
+}
+
+function startMicInline(btn, cb) {
+  if (!navigator.mediaDevices) { toast('Micro non disponible'); return; }
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+    micRecorder = new MediaRecorder(stream);
+    const chunks = [];
+    micRecorder.ondataavailable = e => chunks.push(e.data);
+    micRecorder.onstop = () => {
+      const blob = new Blob(chunks, { type: 'audio/webm' });
+      transcribe(blob, null, cb);
+      stream.getTracks().forEach(t => t.stop());
+    };
+    micRecorder.start();
+    isRecording = true;
+    btn.classList.add('recording');
+    btn.textContent = '⏹️';
+  }).catch(() => toast('Accès micro refusé'));
+}
+
+function stopMicInline(btn, cb) {
+  if (micRecorder) micRecorder.stop();
+  isRecording = false;
+  btn.classList.remove('recording');
+  btn.textContent = '🎙️';
+}
+
+function micInput(inputId, btnId) {
+  const btn = document.getElementById(btnId);
+  if (isRecording) {
+    stopMicInline(btn, v => { document.getElementById(inputId).value = v; });
+    return;
+  }
+  startMicInline(btn, v => { document.getElementById(inputId).value = v; });
+}
+
+async function transcribe(blob, targetId, cb) {
+  toast('Transcription…');
+  try {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onload = async () => {
+      const b64 = reader.result.split(',')[1];
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': K.join(''), 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+        body: JSON.stringify({
+          model: 'claude-opus-4-5',
+          max_tokens: 500,
+          messages: [{ role: 'user', content: [
+            { type: 'text', text: 'Transcris cet audio en français. Retourne uniquement la transcription, sans commentaire.' },
+            { type: 'document', source: { type: 'base64', media_type: blob.type, data: b64 } }
+          ]}]
+        })
+      });
+      const data = await res.json();
+      const text = data.content?.[0]?.text || '';
+      if (targetId) {
+        const el = document.getElementById(targetId);
+        if (el) el.value = (el.value ? el.value + ' ' : '') + text;
+      }
+      if (cb) cb(text);
+      toast('✓ Transcrit');
+    };
+  } catch(e) { toast('Erreur transcription'); }
+}
+
+/* ═══════════════════════════════════════════════
+   IA SYNTHÈSE
+═══════════════════════════════════════════════ */
+async function callClaude(prompt) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-api-key': K.join(''), 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+    body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 800, messages: [{ role: 'user', content: prompt }] })
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.content?.map(c => c.text||'').join('') || '';
+}
+
+function mdToHtml(md) {
+  return (md||'').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\*(.*?)\*/g,'<em>$1</em>').replace(/^[-•] (.+)/gm,'<li>$1</li>').replace(/(<li>.*<\/li>)/s,'<ul>$1</ul>').replace(/\n\n/g,'</p><p>').replace(/^(.)/,'<p>$1').replace(/(.)$/,'$1</p>');
+}
+
+async function synthRub(rubId, did, sid) {
+  const e = sid ? getSous(did,sid) : getDecor(did);
+  const r = RUBRIQUES.find(x => x.id === rubId);
+  const obs = e.tabData[rubId]?.obs || [];
+  if (!obs.length) { toast('Ajoutez des observations d\'abord'); return; }
+  toast('Synthèse IA en cours…');
+  const notes = obs.map(o => '- ' + (o.note||'')).join('\n');
+  try {
+    const cacheKey = (sid||did) + '_' + rubId;
+    const result = await callClaude('Tu es régisseur de cinéma. Fais une synthèse professionnelle courte de ces observations de repérage pour la rubrique ' + r.label + ':\n\n' + notes);
+    synthCache[cacheKey] = result;
+    if (sid) renderSous(); else renderDecor();
+    toast('✓ Synthèse générée');
+  } catch(e) { toast('Erreur IA: ' + e.message); }
+}
+
+/* ═══════════════════════════════════════════════
+   RAPPORT
+═══════════════════════════════════════════════ */
+function genReport() {
+  const p = getProjet();
+  if (!p) { toast('Sélectionnez un projet'); return; }
+  if (!state.decorId) {
+    if (!p.decors.length) { toast('⚠ Aucun décor'); return; }
+    openReport(buildReport(p.nom.toUpperCase(), p.decors));
+  } else {
+    const d = getDecor(state.decorId);
+    openReport(buildReport(d.nom.toUpperCase(), [d]));
+  }
+}
+
+async function genFilmReport() {
+  const p = getProjet();
+  if (!p || !p.decors.length) { toast('⚠ Aucun décor'); return; }
+  toast('Génération rapport film…');
+  let globalNotes = 'PROJET: ' + p.nom + '\n\n';
+  p.decors.forEach(d => {
+    globalNotes += 'DÉCOR: ' + d.nom + '\n';
+    RUBRIQUES.forEach(r => {
+      const obs = d.tabData?.[r.id]?.obs || [];
+      if (obs.length) globalNotes += r.label + ': ' + obs.map(o=>o.note).filter(Boolean).join(' / ') + '\n';
+    });
+    d.sous.forEach(s => {
+      RUBRIQUES.forEach(r => { s.tabData[r.id]?.obs?.forEach(o => { if(o.note) globalNotes += s.nom + '/' + r.label + ': ' + o.note + '\n'; }); });
+    });
+    globalNotes += '\n';
+  });
+  let resume = '';
+  try { resume = await callClaude('Tu es régisseur de cinéma. Rédige un résumé exécutif professionnel de ce repérage (max 1 page):\n\n' + globalNotes); } catch(e) {}
+  openReport(buildReport(p.nom.toUpperCase(), p.decors, resume));
+  toast('✓ Dossier film généré');
+}
+
+function buildReport(titre, decors, resumeIA) {
+  const date = new Date().toLocaleDateString('fr-FR', {weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const totalObs = decors.reduce((a,d) => a + totalDecor(d), 0);
+
+  let h = `<!DOCTYPE html><html lang="fr"><head>
+<meta charset="UTF-8"><title>${titre}</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;color:#111;max-width:900px;margin:0 auto;padding:30px 24px;background:#fff}
+.cover{border-bottom:4px solid #e05c14;padding-bottom:20px;margin-bottom:24px}
+.cvt{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:5px;color:#080808}
+.cvs{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:3px;color:#e05c14;margin-top:4px}
+.cvd{font-family:'DM Mono',monospace;font-size:11px;color:#999;margin-top:6px;letter-spacing:1px}
+.stats{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}
+.stat{background:#f8f5f0;border-radius:8px;padding:10px 16px;text-align:center}
+.stn{font-family:'Bebas Neue',sans-serif;font-size:28px;color:#e05c14}
+.stl{font-size:10px;color:#999;letter-spacing:1px;text-transform:uppercase}
+.btns{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.btn-rpt{padding:10px 16px;border-radius:7px;border:none;font-size:13px;font-weight:600;cursor:pointer;color:white}
+.resume{background:#fff8f0;border:2px solid #e05c14;border-radius:8px;padding:18px;margin-bottom:24px}
+.resume-t{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:3px;color:#e05c14;margin-bottom:10px}
+.resume-body{font-size:13px;line-height:1.75;color:#333}
+.toc{background:#f8f5f0;border-radius:8px;padding:16px;margin-bottom:24px}
+.toc-t{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:3px;color:#e05c14;margin-bottom:10px}
+.toc-d{font-size:13px;font-weight:600;margin-bottom:4px;margin-top:8px}
+.toc-s{font-size:12px;color:#666;margin-left:14px;margin-bottom:2px}
+.dsec{margin-bottom:36px;break-inside:avoid}
+.dband{background:#e05c14;color:white;padding:10px 16px;border-radius:8px 8px 0 0;display:flex;justify-content:space-between;align-items:center}
+.dband-n{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px}
+.dband-c{font-family:'DM Mono',monospace;font-size:10px;opacity:0.85}
+.contacts-blk{border:1px solid #e0ddd5;border-top:none;padding:10px 14px;background:#fffdf9}
+.contacts-t{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;color:#e05c14;margin-bottom:6px}
+.contact-r{font-size:12px;color:#333;margin-bottom:3px}
+.ssec{border:1px solid #eae8e2;border-top:none;overflow:hidden;margin-bottom:8px}
+.shd{background:#f0ede6;padding:8px 14px;border-bottom:1px solid #e0ddd5;display:flex;align-items:center;gap:10px}
+.shd-n{font-size:13px;font-weight:600;color:#333;flex:1}
+.shd-b{background:#e05c14;color:#fff;font-family:'DM Mono',monospace;font-size:9px;padding:2px 7px;border-radius:10px}
+.tab-blk{padding:10px 14px;border-bottom:1px solid #f0ede6}
+.tab-blk:last-child{border-bottom:none}
+.tab-n{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:2px;color:#e05c14;margin-bottom:6px}
+.obs{border:1px solid #eae8e2;border-radius:5px;overflow:hidden;margin-bottom:8px}
+.obs-img img{width:100%;max-height:320px;object-fit:contain;background:#f5f5f5;display:block}
+.obs-body{padding:8px 12px}
+.obs-meta{display:flex;gap:8px;margin-bottom:4px}
+.obs-n{font-family:'Bebas Neue',sans-serif;font-size:14px;color:#e05c14}
+.obs-t{font-family:'DM Mono',monospace;font-size:9px;color:#bbb;margin-top:2px}
+.obs-note{font-size:13px;line-height:1.6;color:#222;white-space:pre-wrap}
+.pied{border-top:1px solid #e0ddd5;margin-top:32px;padding-top:12px;display:flex;justify-content:space-between}
+.pied-l{font-family:'DM Mono',monospace;font-size:10px;color:#bbb;letter-spacing:1px}
+.pied-r{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:3px;color:#e05c14}
+@media print{body{padding:16px}.dsec+.dsec{page-break-before:always}.btns{display:none}}
+</style></head><body>`;
+
+  // Action buttons
+  h += `<div class="btns">
+    <button class="btn-rpt" style="background:#e05c14" onclick="window.print()">🖨️ Imprimer / PDF</button>
+    <button class="btn-rpt" style="background:#1a5fa0" onclick="sendEmail()">✉️ Email</button>
+    <button class="btn-rpt" style="background:#25d366" onclick="sendWhatsApp()">💬 WhatsApp</button>
+  </div>
+  <script>
+  function sendEmail(){window.location.href='mailto:?subject='+encodeURIComponent(document.title)+'&body='+encodeURIComponent('Bonjour,\\n\\nVeuillez trouver le rapport de repérage "'+document.title+'".\\n\\nPour le PDF, imprimez cette page et choisissez Enregistrer en PDF.');}
+  function sendWhatsApp(){window.open('https://wa.me/?text='+encodeURIComponent('Rapport de repérage: '+document.title),'_blank');}
+  <\/script>`;
+
+  // Cover
+  h += `<div class="cover">
+    <div class="cvt">${esc(titre)}</div>
+    <div class="cvs">REPÉRAGE TECHNIQUE</div>
+    <div class="cvd">${date}</div>
+    <div class="stats">
+      <div class="stat"><div class="stn">${decors.length}</div><div class="stl">Décor${decors.length>1?'s':''}</div></div>
+      <div class="stat"><div class="stn">${decors.reduce((a,d)=>a+d.sous.length,0)}</div><div class="stl">Sous-décors</div></div>
+      <div class="stat"><div class="stn">${totalObs}</div><div class="stl">Observations</div></div>
+    </div>
+  </div>`;
+
+  // Résumé IA
+  if (resumeIA) {
+    h += `<div class="resume"><div class="resume-t">✦ RÉSUMÉ EXÉCUTIF</div><div class="resume-body">${mdToHtml(resumeIA)}</div></div>`;
+  }
+
+  // Sommaire
+  h += `<div class="toc"><div class="toc-t">SOMMAIRE</div>`;
+  decors.forEach(d => {
+    h += `<div class="toc-d">📍 ${esc(d.nom)}`;
+    if (d.adresse || d.ville) h += ` <span style="font-size:11px;color:#999;font-weight:400">— ${esc([d.adresse,d.codepostal,d.ville].filter(Boolean).join(', '))}</span>`;
+    h += `</div>`;
+    d.sous.forEach(s => { h += `<div class="toc-s">↳ ${esc(s.nom)}</div>`; });
+  });
+  h += `</div>`;
+
+  // Décors
+  decors.forEach(d => {
+    const tot = totalDecor(d);
+    h += `<div class="dsec"><div class="dband"><span class="dband-n">${esc(d.nom)}</span><span class="dband-c">${tot} obs.</span></div>`;
+    if (d.contacts?.length) {
+      h += `<div class="contacts-blk"><div class="contacts-t">CONTACTS</div>`;
+      d.contacts.forEach(c => { h += `<div class="contact-r"><strong>${esc(c.nom)}</strong>${c.tel?' — 📞 '+esc(c.tel):''}${c.mail?' — ✉ '+esc(c.mail):''}</div>`; });
+      h += `</div>`;
+    }
+    // Rubriques décor
+    const secD = renderSecReport(d);
+    if (secD) h += `<div class="ssec"><div class="shd"><span class="shd-n">📋 Général — ${esc(d.nom)}</span></div>${secD}</div>`;
+    // Sous-décors
+    d.sous.forEach(s => {
+      const cnt = countObs(s);
+      const sec = renderSecReport(s);
+      if (sec || cnt) h += `<div class="ssec"><div class="shd"><span class="shd-n">↳ ${esc(s.nom)}</span><span class="shd-b">${cnt} obs.</span></div>${sec}</div>`;
+    });
+    h += `</div>`;
+  });
+
+  h += `<div class="pied"><span class="pied-l">Généré le ${date}</span><span class="pied-r">● REPÉRAGE PRO</span></div>`;
+  h += `</body></html>`;
+  return h;
+}
+
+function renderSecReport(entity) {
+  let out = '';
+  RUBRIQUES.forEach(r => {
+    const td = entity.tabData?.[r.id];
+    const obs = td?.obs || [];
+    const hasSpec = (r.id==='elec' && (td?.mode||td?.puissance)) || (r.id==='loges' && (td?.lieu||td?.contact));
+    if (!obs.length && !hasSpec) return;
+    out += `<div class="tab-blk"><div class="tab-n">${r.icon} ${r.label.toUpperCase()}</div>`;
+    if (r.id==='elec' && td?.mode) {
+      const mLabel = {direct:'⚡ Branchement direct',groupe:'🔋 Groupe électrogène',mixte:'⚡🔋 Direct + Groupe'}[td.mode] || td.mode;
+      out += `<div style="font-size:12px;color:#555;margin-bottom:6px">${mLabel}${td.puissance?' — '+esc(td.puissance):''}</div>`;
+    }
+    if (r.id==='loges' && td) {
+      if (td.lieu) out += `<div style="font-size:12px;color:#555;margin-bottom:3px">📍 ${esc(td.lieu)}</div>`;
+      if (td.contact) out += `<div style="font-size:12px;color:#555;margin-bottom:3px">👤 ${esc(td.contact)}${td.tel?' — 📞 '+esc(td.tel):''}</div>`;
+      if (td.acces) out += `<div style="font-size:12px;color:#555;margin-bottom:6px">🔑 ${esc(td.acces)}</div>`;
+    }
+    [...obs].reverse().forEach(o => {
+      out += `<div class="obs">${o.photo?`<div class="obs-img"><img src="${o.photo}" alt=""></div>`:''}<div class="obs-body"><div class="obs-meta"><span class="obs-n">OBS.#${o.num}</span><span class="obs-t">🕐 ${o.heure}</span></div><div class="obs-note">${esc(o.note||'(Sans note)')}</div></div></div>`;
+    });
+    out += `</div>`;
+  });
+  return out;
+}
+
+function openReport(html) {
+  const w = window.open('', '_blank');
+  if (w) { w.document.write(html); w.document.close(); }
+  else toast('⚠ Autorisez les popups');
+}
+
+/* ═══════════════════════════════════════════════
+   CARTE OPENSTREETMAP
+═══════════════════════════════════════════════ */
+function openMapDecors() {
+  const p = getProjet();
+  if (!p) { toast('Sélectionnez un projet'); return; }
+  const dd = p.decors.filter(d => d.adresse || d.ville);
+  if (!dd.length) { toast('Ajoutez des adresses dans vos décors'); return; }
+
+  const decorData = dd.map(d => ({ nom: d.nom, addr: [d.adresse, d.codepostal, d.ville].filter(Boolean).join(', ') }));
+  const projetNom = p.nom;
+
+  const mapHtml = `<!DOCTYPE html><html><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Carte — ${esc(projetNom)}</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"><\/script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:sans-serif}
+#map{position:fixed;inset:0}
+#legend{position:fixed;top:12px;right:12px;background:white;border-radius:10px;padding:14px 16px;box-shadow:0 3px 14px rgba(0,0,0,0.25);z-index:9999;max-width:220px;max-height:80vh;overflow-y:auto}
+#legend h3{color:#e05c14;font-size:13px;letter-spacing:2px;margin-bottom:10px;font-family:sans-serif;font-weight:700}
+.leg-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;cursor:pointer;padding:4px;border-radius:4px}
+.leg-item:hover{background:#f5f5f5}
+.leg-dot{width:22px;height:22px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:11px;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3)}
+.leg-name{font-size:11px;color:#333;line-height:1.4}
+.leg-addr{font-size:10px;color:#999}
+#status{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.75);color:white;padding:8px 18px;border-radius:20px;font-size:12px;z-index:9999;display:none;font-family:sans-serif}
+</style></head><body>
+<div id="map"></div>
+<div id="legend"><h3>🎬 ${esc(projetNom).toUpperCase()}</h3><div id="leg-items"></div></div>
+<div id="status"></div>
+<script>
+var map = L.map('map').setView([46.8, 2.3], 6);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution:'© OpenStreetMap',maxZoom:19}).addTo(map);
+var decors = ${JSON.stringify(decorData)};
+var colors = ['#e05c14','#1a5fa0','#1e8a4a','#7c3aed','#c0392b','#d35400','#2980b9','#27ae60','#8e44ad','#16a085'];
+var markers = [], bounds = [];
+var legEl = document.getElementById('leg-items');
+var statusEl = document.getElementById('status');
+
+function showStatus(msg){statusEl.textContent=msg;statusEl.style.display='block';}
+function hideStatus(){statusEl.style.display='none';}
+
+function geocodeNext(i) {
+  if (i >= decors.length) {
+    hideStatus();
+    if (bounds.length > 1) map.fitBounds(L.latLngBounds(bounds), {padding:[40,40]});
+    else if (bounds.length === 1) map.setView(bounds[0], 14);
+    return;
+  }
+  var d = decors[i], color = colors[i % colors.length];
+  showStatus('Localisation ' + (i+1) + '/' + decors.length + ': ' + d.nom);
+  fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&accept-language=fr&q=' + encodeURIComponent(d.addr))
+  .then(function(r){return r.json();})
+  .then(function(res) {
+    var legDiv = document.createElement('div');
+    legDiv.className = 'leg-item';
+    if (res && res.length > 0) {
+      var lat = parseFloat(res[0].lat), lng = parseFloat(res[0].lon);
+      bounds.push([lat, lng]);
+      var num = i + 1;
+      var iconHtml = '<div style="width:26px;height:26px;border-radius:50%;background:' + color + ';color:white;text-align:center;line-height:26px;font-weight:bold;font-size:12px;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.4)">' + num + '</div>';
+      var icon = L.divIcon({html:iconHtml, iconSize:[26,26], iconAnchor:[13,13], popupAnchor:[0,-16], className:''});
+      var marker = L.marker([lat,lng], {icon:icon}).addTo(map);
+      marker.bindPopup('<strong style="color:#e05c14">' + d.nom + '</strong><br><small>' + d.addr + '</small>', {maxWidth:200});
+      markers[i] = marker;
+      legDiv.innerHTML = '<div class="leg-dot" style="background:' + color + '">' + num + '</div><div><div class="leg-name"><strong>' + d.nom + '</strong></div><div class="leg-addr">' + d.addr + '</div></div>';
+      legDiv.onclick = (function(m){return function(){m.openPopup();map.panTo(m.getLatLng());};})(marker);
+    } else {
+      legDiv.innerHTML = '<div class="leg-dot" style="background:#ccc">?</div><div><div class="leg-name"><strong>' + d.nom + '</strong></div><div class="leg-addr" style="color:#e05c14">Adresse non trouvée</div></div>';
+    }
+    legEl.appendChild(legDiv);
+    setTimeout(function(){geocodeNext(i+1);}, 400);
+  })
+  .catch(function(){setTimeout(function(){geocodeNext(i+1);}, 400);});
+}
+geocodeNext(0);
+<\/script></body></html>`;
+
+  const w = window.open('', '_blank');
+  if (w) { w.document.write(mapHtml); w.document.close(); }
+  else toast('Autorisez les popups pour voir la carte');
+}
+
+/* ═══════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════ */
+dbLoad();
+initMic();
+renderProjets();
+</script>
+</body>
+</html>
